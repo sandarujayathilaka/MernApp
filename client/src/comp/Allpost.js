@@ -1,4 +1,5 @@
 import React, {useState,useEffect} from "react";
+import {Link} from "react-router-dom"
 import axios from "axios";
 
 
@@ -8,11 +9,14 @@ export default function Allpost(){
     const [posts,setPosts] = useState([]);
 
 
+        useEffect(()=>{
+
         function getPosts(){
             axios.get("http://localhost:8000/posts").then((res)=>{
            // if(res.data.success){
                 const allposts = res.data
                 setPosts(allposts)
+                
            // }
 
             }).catch((err)=>{
@@ -21,16 +25,32 @@ export default function Allpost(){
 
             })
         } 
-
-        useEffect(()=>{
-
             getPosts()
     
         },[])
 
+        function refreshPage() {
+            window.location.reload(false);
+          }
 
-        
 
+         const onDelete =(id)=>{
+            axios.delete(`http://localhost:8000/post/delete/${id}`).then((res)=>{
+
+            alert("Element Deleted!!")
+            refreshPage()
+               
+     
+                 }).catch((err)=>{
+     
+                     alert(err)
+                     
+     
+                 })
+        }
+
+
+       
 return(
 
     <div className="container">
@@ -48,24 +68,23 @@ return(
             {posts.map((posts)=>
                 <tr>
                     <td>
-                    <a href={`/post/get/${posts._id}`} style={{textDecoration:'none'}}>{posts.topic}</a>
+                    <Link to={`/post/get/${posts._id}`} style={{textDecoration:'none'}}>{posts.topic}</Link>
                         </td>
                     <td>{posts.description}</td>
                     <td>{posts.postCategory}</td>
                     <td>
-                    <a className="btn btn-warning" href="">Edit</a>
+                    <a className="btn btn-warning" href={`/post/update/${posts._id}`}>Update</a>
                     &nbsp;
-                    <a className="btn btn-danger" href="">Delete</a>
+                    <a className="btn btn-danger" onClick={()=>onDelete(posts._id)}>Delete</a>
                         </td>
                 </tr>
+              
             )}
             </tbody>
             </table>
         
     </div>
 )
-
-
 
 }
 

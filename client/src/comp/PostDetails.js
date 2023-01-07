@@ -5,40 +5,48 @@ import axios from 'axios'
 
 export default function PostDetails(){
 
-    const [posts,setPost] = useState({});
+    const [post,setPost] = useState({});
     const param =  useParams();
+    
+  
 
-        function getPosts(){
+      function getPost(){
 
-            const pid = param.id
-
-            axios.get(`http://localhost:8000/post/get/${pid}`).then((res)=>{
-           // if(res.data.success){
-                const Onepost = res.data
-                setPost(Onepost.posts)
-                console.log(posts)
+                const pid = param.id
                
-                //setPosts(allposts)
-           // }
+    
+                axios.get(`http://localhost:8000/post/get/${pid}`).then((res)=>{
+               // if(res.data.success){
 
-            }).catch((err)=>{
+               const Onepost =res.data
+              
+                    setPost(Onepost.posts)
+                   
+                    //setPosts(allposts)
+               // }
+    
+                }).catch((err)=>{
+    
+                    alert(err)
+    
+                })
+    
+            } 
 
-                alert(err)
+            useEffect(()=>{
 
-            })
-
-
-        } 
-
-        useEffect(()=>{
-
-            getPosts()
+            getPost()
     
         },[])
 
-        return(
 
-            <h1></h1>
+        return(
+            <div className="container">
+
+            <h1>{post.topic}</h1>
+            <h1>{post.description}</h1>
+            <h1>{post.postCategory}</h1>
+            </div>
 
         )
 
